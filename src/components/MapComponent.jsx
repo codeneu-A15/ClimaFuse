@@ -523,12 +523,44 @@ export default function MapComponent({
     }
   }, [currentOverlay]);
 
+  // Reference storing created marker items to allow fast in-place selection updates
+  const markersDataRef = useRef([]);
+
+  // In-place update of marker selection state (prevents DOM destruction, flicker, and layout shifts)
+  const updateMarkerSelection = (currentSelected) => {
+    markersDataRef.current.forEach(({ pillEl, dotEl, containerEl, city }) => {
+      const isSelected = currentSelected?.id === city.id;
+      const dotMargin = dotEl.getAttribute('data-margin') || 'mx-auto';
+      if (isSelected) {
+        containerEl.style.zIndex = '40';
+        pillEl.className =
+          'relative flex items-center space-x-1.5 px-2 py-0.5 rounded-full backdrop-blur-md shadow-xl whitespace-nowrap bg-[#181818] border-2 border-[#4edea3] ring-1 ring-[#4edea3]/40 shadow-[0_0_16px_rgba(78,222,163,0.3)] transition-colors duration-150';
+        dotEl.className = `w-2 h-2 rounded-full bg-[#4edea3] ring-2 ring-white shadow-[0_0_8px_#4edea3] transition-colors duration-150 ${dotMargin}`;
+      } else {
+        containerEl.style.zIndex = '20';
+        pillEl.className =
+          'relative flex items-center space-x-1.5 px-2 py-0.5 rounded-full backdrop-blur-md shadow-xl whitespace-nowrap bg-[#111111]/92 border-2 border-[#333333] hover:border-[#666666] transition-colors duration-150';
+        dotEl.className = `w-2 h-2 rounded-full bg-[#e5e2e1] ring-2 ring-black/70 shadow-sm transition-colors duration-150 ${dotMargin}`;
+      }
+      const iconEl = pillEl.querySelector('.material-symbols-outlined');
+      if (iconEl) {
+        iconEl.className = `material-symbols-outlined text-[13px] ${
+          isSelected ? 'text-[#4edea3]' : 'text-[#8e9192]'
+        }`;
+      }
+    });
+  };
+
   // Sync DOM Markers for cities
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
 
-    renderMarkers(map, cities, selectedCity, onCityClick, isLanding);
+    if (markersDataRef.current.length === cities.length && !isLanding) {
+      updateMarkerSelection(selectedCity);
+    } else {
+      renderMarkers(map, cities, selectedCity, onCityClick, isLanding);
+    }
   }, [cities, selectedCity, onCityClick, isLanding]);
 
   // Handler for basemap change button
@@ -543,19 +575,83 @@ export default function MapComponent({
   const renderMarkers = (map, cityList, currentSelected, clickHandler, landingMode) => {
     markersRef.current.forEach((m) => m.remove());
     markersRef.current = [];
+    markersDataRef.current = [];
 
-    // Distinct non-overlapping geographic anchor alignments for closely positioned stations
-    const CITY_POSITIONS = {
-      mumbai: { anchor: 'bottom-right', offset: [-12, -4] },
-      pune: { anchor: 'top-left', offset: [12, 4] },
-      bengaluru: { anchor: 'bottom-right', offset: [-12, -4] },
-      chennai: { anchor: 'bottom-left', offset: [12, -4] },
-      jaipur: { anchor: 'bottom-right', offset: [-10, -4] },
-      lucknow: { anchor: 'bottom-left', offset: [10, -4] },
-      delhi: { anchor: 'bottom', offset: [0, -8] },
-      ahmedabad: { anchor: 'bottom-right', offset: [-10, -4] },
-      kolkata: { anchor: 'bottom-left', offset: [10, -4] },
-      hyderabad: { anchor: 'bottom', offset: [0, -6] },
+    // Precise non-overlapping geographic anchoring:
+    // - Jaipur extends West (Rajasthan) & Lucknow extends East (UP) to prevent mid-Gangetic collision
+    // - Mumbai extends East above (Thane/Nashik) & Pune hangs South-East below (Satara/Solapur) to eliminate overlap
+    // - Bengaluru extends West (Karnataka) & Chennai sits centered on coast to prevent southern corridor overlap
+    const CITY_CONFIG = {
+      delhi: {
+        anchor: 'bottom',
+        dotAlign: 'justify-center',
+        dotMargin: 'mx-auto',
+        offset: [0, 0],
+        dotPosition: 'bottom',
+      },
+      jaipur: {
+        anchor: 'bottom-right',
+        dotAlign: 'justify-end',
+        dotMargin: 'mr-2',
+        offset: [12, 0],
+        dotPosition: 'bottom',
+      },
+      lucknow: {
+        anchor: 'bottom-left',
+        dotAlign: 'justify-start',
+        dotMargin: 'ml-2',
+        offset: [-12, 0],
+        dotPosition: 'bottom',
+      },
+      ahmedabad: {
+        anchor: 'bottom',
+        dotAlign: 'justify-center',
+        dotMargin: 'mx-auto',
+        offset: [0, 0],
+        dotPosition: 'bottom',
+      },
+      kolkata: {
+        anchor: 'bottom-right',
+        dotAlign: 'justify-end',
+        dotMargin: 'mr-2',
+        offset: [12, 0],
+        dotPosition: 'bottom',
+      },
+      mumbai: {
+        anchor: 'bottom-left',
+        dotAlign: 'justify-start',
+        dotMargin: 'ml-2',
+        offset: [-12, 0],
+        dotPosition: 'bottom',
+      },
+      pune: {
+        anchor: 'top-left',
+        dotAlign: 'justify-start',
+        dotMargin: 'ml-2',
+        offset: [-12, -4],
+        dotPosition: 'top',
+      },
+      hyderabad: {
+        anchor: 'bottom',
+        dotAlign: 'justify-center',
+        dotMargin: 'mx-auto',
+        offset: [0, 0],
+        dotPosition: 'bottom',
+      },
+      bengaluru: {
+        anchor: 'bottom-right',
+        dotAlign: 'justify-end',
+        dotMargin: 'mr-2',
+        offset: [12, 0],
+        dotPosition: 'bottom',
+      },
+      chennai: {
+        anchor: 'bottom',
+        dotAlign: 'justify-center',
+        dotMargin: 'mx-auto',
+        offset: [0, 0],
+        dotPosition: 'bottom',
+      },
     };
 
     cityList.forEach((city) => {
@@ -573,46 +669,97 @@ export default function MapComponent({
             </span>
           </div>
         `;
-      } else {
-        el.className = `group cursor-pointer transition-all duration-200 ${isSelected ? 'z-30 scale-110' : 'z-20 hover:scale-105'
-          }`;
 
-        el.innerHTML = `
-          <div class="relative flex items-center space-x-1.5 px-2.5 py-1 rounded-full backdrop-blur-md shadow-xl transition-all whitespace-nowrap ${isSelected
-            ? 'bg-[#181818] border-2 border-white'
-            : 'bg-[#111111]/90 border border-[#353534] hover:border-white'
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (clickHandler) clickHandler(city);
+        });
+
+        const marker = new maplibregl.Marker({
+          element: el,
+          anchor: 'center',
+          offset: [0, 0],
+        })
+          .setLngLat([city.lon, city.lat])
+          .addTo(map);
+
+        markersRef.current.push(marker);
+      } else {
+        const config = CITY_CONFIG[city.id] || {
+          anchor: 'bottom',
+          dotAlign: 'justify-center',
+          dotMargin: 'mx-auto',
+          offset: [0, 0],
+          dotPosition: 'bottom',
+        };
+
+        const isDotTop = config.dotPosition === 'top';
+        const dotMarginClass = config.dotMargin || 'mx-auto';
+
+        // Fixed-scale container: NO scale-110 or hover:scale-105 prevents pointer displacement on click
+        el.className = 'group cursor-pointer select-none';
+        el.style.zIndex = isSelected ? '40' : '20';
+        el.style.transformOrigin = config.anchor.replace('-', ' ');
+
+        const dotMarkup = `
+          <div class="w-full flex ${config.dotAlign} ${isDotTop ? 'mb-0.5' : 'mt-0.5'}">
+            <div data-margin="${dotMarginClass}" class="w-2 h-2 rounded-full ${dotMarginClass} transition-colors duration-150 ${
+              isSelected
+                ? 'bg-[#4edea3] ring-2 ring-white shadow-[0_0_8px_#4edea3]'
+                : 'bg-[#e5e2e1] ring-2 ring-black/70 shadow-sm'
+            }"></div>
+          </div>
+        `;
+
+        const pillMarkup = `
+          <div class="relative flex items-center space-x-1.5 px-2 py-0.5 rounded-full backdrop-blur-md shadow-xl whitespace-nowrap transition-colors duration-150 ${
+            isSelected
+              ? 'bg-[#181818] border-2 border-[#4edea3] ring-1 ring-[#4edea3]/40 shadow-[0_0_16px_rgba(78,222,163,0.3)]'
+              : 'bg-[#111111]/92 border-2 border-[#333333] hover:border-[#666666]'
           }">
-            <span class="w-2 h-2 rounded-full shrink-0" style="background-color: ${city.alertColor}; ${city.alertTier === 'Red'
-            ? 'animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;'
-            : ''
-          }"></span>
+            <span class="w-2 h-2 rounded-full shrink-0" style="background-color: ${city.alertColor}; ${
+              city.alertTier === 'Red'
+                ? 'animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;'
+                : ''
+            }"></span>
             <span class="font-mono text-xs font-semibold text-white">${city.name}</span>
             <span class="font-mono text-[11px] text-[#a3a3a3]">${city.temp}°</span>
-            <span class="material-symbols-outlined text-[13px] ${isSelected ? 'text-white' : 'text-[#8e9192]'
-          }">${city.icon}</span>
+            <span class="material-symbols-outlined text-[13px] ${
+              isSelected ? 'text-[#4edea3]' : 'text-[#8e9192]'
+            }">${city.icon}</span>
           </div>
-          <div class="w-2 h-2 rounded-full mx-auto mt-0.5 ${isSelected ? 'bg-white ring-2 ring-white/50' : 'bg-[#e5e2e1] ring-1 ring-black/40'
-          }"></div>
         `;
-      }
 
-      el.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (clickHandler) {
-          clickHandler(city);
+        el.innerHTML = isDotTop ? (dotMarkup + pillMarkup) : (pillMarkup + dotMarkup);
+
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (clickHandler) clickHandler(city);
+        });
+
+        const marker = new maplibregl.Marker({
+          element: el,
+          anchor: config.anchor,
+          offset: config.offset,
+        })
+          .setLngLat([city.lon, city.lat])
+          .addTo(map);
+
+        markersRef.current.push(marker);
+
+        const pillEl = isDotTop ? el.lastElementChild : el.firstElementChild;
+        const dotContainer = isDotTop ? el.firstElementChild : el.lastElementChild;
+        const dotEl = dotContainer ? dotContainer.firstElementChild : null;
+        if (pillEl && dotEl) {
+          markersDataRef.current.push({
+            marker,
+            containerEl: el,
+            pillEl,
+            dotEl,
+            city,
+          });
         }
-      });
-
-      const cityPos = CITY_POSITIONS[city.id] || { anchor: 'bottom', offset: [0, -4] };
-      const marker = new maplibregl.Marker({
-        element: el,
-        anchor: landingMode ? 'center' : cityPos.anchor,
-        offset: landingMode ? [0, 0] : cityPos.offset,
-      })
-        .setLngLat([city.lon, city.lat])
-        .addTo(map);
-
-      markersRef.current.push(marker);
+      }
     });
   };
 

@@ -43,6 +43,8 @@ export default function ModelWeightMap({
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef([]);
+  const markersDataRef = useRef([]);
+  const lastRenderParamsRef = useRef({ regime: null, model: null, lead: null });
 
   const [currentBasemap, setCurrentBasemap] = useState('physical');
   const [currentRegime, setCurrentRegime] = useState(activeRegime);
@@ -313,10 +315,37 @@ export default function ModelWeightMap({
     });
   }, [currentBasemap]);
 
+  // In-place selection state update for model weight badges (prevents DOM destruction, flicker, and layout shifts)
+  const updateMarkerSelection = (currentSelectedNode, currentRegId) => {
+    markersDataRef.current.forEach(({ pillEl, containerEl, node }) => {
+      const isRegionActive = node.regionId === currentRegId;
+      const isSelected = currentSelectedNode?.id === node.id || isRegionActive;
+      if (isSelected) {
+        containerEl.style.zIndex = '30';
+        pillEl.className =
+          'relative flex items-center space-x-1.5 px-2 py-0.5 rounded-full backdrop-blur-md shadow-xl transition-colors duration-150 bg-[#181818] border-2 border-[#4edea3] ring-1 ring-[#4edea3]/40 shadow-[0_0_12px_rgba(78,222,163,0.3)]';
+      } else {
+        containerEl.style.zIndex = '20';
+        pillEl.className =
+          'relative flex items-center space-x-1.5 px-2 py-0.5 rounded-full backdrop-blur-md shadow-xl transition-colors duration-150 bg-[#111111]/90 border-2 border-[#333333] hover:border-[#666666]';
+      }
+    });
+  };
+
+  // Sync selection state in-place when selectedNode changes
+  useEffect(() => {
+    updateMarkerSelection(selectedNode, selectedRegion);
+  }, [selectedNode]);
+
   // Update dataset when regime, model, lead time, or region selection changes
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
+
+    const paramsChanged =
+      lastRenderParamsRef.current.regime !== currentRegime ||
+      lastRenderParamsRef.current.model !== currentModel ||
+      lastRenderParamsRef.current.lead !== currentLeadTime;
 
     if (map.isStyleLoaded()) {
       const source = map.getSource('model-weights-source');
@@ -325,7 +354,12 @@ export default function ModelWeightMap({
       } else {
         attachWeightLayers(map, currentBasemap, currentRegime, currentModel, currentLeadTime);
       }
-      renderDOMMarkers(map, currentRegime, currentModel, currentLeadTime, selectedRegion);
+
+      if (paramsChanged || markersDataRef.current.length === 0) {
+        renderDOMMarkers(map, currentRegime, currentModel, currentLeadTime, selectedRegion);
+      } else {
+        updateMarkerSelection(selectedNode, selectedRegion);
+      }
     } else {
       map.once('load', () => {
         attachWeightLayers(map, currentBasemap, currentRegime, currentModel, currentLeadTime);
@@ -338,6 +372,8 @@ export default function ModelWeightMap({
   const renderDOMMarkers = (map, regimeKey, modelKey, leadKey, activeRegId) => {
     markersRef.current.forEach((m) => m.remove());
     markersRef.current = [];
+    markersDataRef.current = [];
+    lastRenderParamsRef.current = { regime: regimeKey, model: modelKey, lead: leadKey };
 
     // Lead time multiplier
     let leadMult = { ec: 1.0, ai: 1.0, ncmrwf: 1.0 };
@@ -384,16 +420,16 @@ export default function ModelWeightMap({
       const isRegionActive = node.regionId === activeRegId;
       const isSelected = selectedNode?.id === node.id || isRegionActive;
 
+      // Fixed scale with zero geometric distortion on click
       const el = document.createElement('div');
-      el.className = `group cursor-pointer transition-all duration-200 ${
-        isSelected ? 'z-30 scale-110' : 'z-20 hover:scale-105'
-      }`;
+      el.className = 'group cursor-pointer select-none';
+      el.style.zIndex = isSelected ? '30' : '20';
 
       el.innerHTML = `
-        <div class="relative flex items-center space-x-1.5 px-2 py-0.5 rounded-full backdrop-blur-md shadow-xl transition-all ${
+        <div class="relative flex items-center space-x-1.5 px-2 py-0.5 rounded-full backdrop-blur-md shadow-xl transition-colors duration-150 ${
           isSelected
-            ? 'bg-[#181818] border-2 border-[#4edea3] ring-2 ring-[#4edea3]/30 shadow-[#4edea3]/20'
-            : 'bg-[#111111]/90 border border-[#353534] hover:border-white'
+            ? 'bg-[#181818] border-2 border-[#4edea3] ring-1 ring-[#4edea3]/40 shadow-[0_0_12px_rgba(78,222,163,0.3)]'
+            : 'bg-[#111111]/90 border-2 border-[#333333] hover:border-[#666666]'
         }">
           <span class="w-1.5 h-1.5 rounded-full shrink-0" style="background-color: ${pipColor};"></span>
           <span class="font-mono text-[9px] font-semibold text-white leading-tight">${node.name}</span>
@@ -414,6 +450,16 @@ export default function ModelWeightMap({
         .addTo(map);
 
       markersRef.current.push(marker);
+
+      const pillEl = el.firstElementChild;
+      if (pillEl) {
+        markersDataRef.current.push({
+          marker,
+          containerEl: el,
+          pillEl,
+          node,
+        });
+      }
     });
   };
 
