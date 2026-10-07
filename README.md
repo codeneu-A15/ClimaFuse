@@ -7,14 +7,14 @@
 [![Recharts](https://img.shields.io/badge/Recharts-v3.10-22B5BF)](https://recharts.org/)
 [![License](https://img.shields.io/badge/License-MIT-emerald)](LICENSE)
 
-> **High-precision meteorological intelligence fusing ECMWF numerical weather prediction (IFS) with deep learning neural models (AIFS) via Adaptive Bayesian Model Averaging (BMA), calibrated against 800+ India Meteorological Department (IMD) Automatic Weather Stations.**
+> **High-precision meteorological intelligence fusing NOAA numerical weather prediction (GFS) with deep learning neural models (AIFS) via Adaptive Bayesian Model Averaging (BMA), calibrated against 800+ India Meteorological Department (IMD) Automatic Weather Stations.**
 
 ---
 
 ## 1. Executive Summary & Problem Space
 
 Modern meteorology faces a fundamental trade-off:
-- **Physics-Based NWP (e.g., ECMWF IFS, NCMRWF Unified)**: Solves primitive hydro-thermodynamic Navier-Stokes atmospheric equations. Excels at tracking synoptic-scale waves and conservation laws, but suffers from steep computational cost, grid-scale friction biases, and elevation smearing over complex orography (e.g., Himalayas, Western Ghats).
+- **Physics-Based NWP (e.g., NOAA GFS, NCMRWF Unified)**: Solves primitive hydro-thermodynamic Navier-Stokes atmospheric equations. Excels at tracking synoptic-scale waves and conservation laws, but suffers from steep computational cost, grid-scale friction biases, and elevation smearing over complex orography (e.g., Himalayas, Western Ghats).
 - **Neural/AI Weather Prediction (e.g., ECMWF AIFS, GraphCast)**: Deep learning autoregressive transformers and Graph Neural Networks (GNNs). Delivers 1000× faster inference with ultra-low diurnal bias, but can struggle with unprecedented out-of-distribution extremes and lacks explicit mass/moisture conservation.
 - **Traditional Consensus Blends**: Rely on static, regionally invariant arithmetic averaging that fails during localized convective episodes, monsoon surges, or nocturnal temperature inversions.
 
@@ -64,7 +64,7 @@ Modern meteorology faces a fundamental trade-off:
 ### 3. Geospatial Model Consensus & Comparison (`/dashboard?tab=comparison`)
 - **Prominent Left Column — Geospatial BMA Weight Map**:
   - Renders empirical BMA attribution weights across 25+ stations and 12 regions.
-  - Interactive model filter: Consensus Blend, ECMWF IFS (Physics), ECMWF AIFS (Neural GNN), and NCMRWF Unified (Regional).
+  - Interactive model filter: Consensus Blend, NOAA GFS (Physics), ECMWF AIFS (Neural GNN), and NCMRWF Unified (Regional).
   - Multi-regime switcher (Thermal Weights, Precipitation Weights, Heat Index Weights).
 - **Dedicated Right Column — Analytical Weight Panel**:
   - Lead time selectors (`24 Hours`, `3 Days`, `7 Days`, `14 Days`) dynamically recalculating model weights.
@@ -86,7 +86,7 @@ Modern meteorology faces a fundamental trade-off:
   10. **Lucknow** (Amausi — `Station 42369`)
 - **5-Parameter Telemetry Grid**: Surface Air Temp, Apparent Heat Index, Accumulated Rain, Surface Vector Wind, Relative Humidity.
 - **3 High-Fidelity SVG Charts**:
-  - **Temperature Timeseries**: 24h diurnal curves with 90% BMA confidence interval polygon, ECMWF IFS (dashed blue), ECMWF AIFS (dotted green), ClimaFuse BMA (solid amber), and IMD Observed ground truth nodes with hover crosshair and tooltips.
+  - **Temperature Timeseries**: 24h diurnal curves with 90% BMA confidence interval polygon, NOAA GFS (dashed blue), ECMWF AIFS (dotted green), ClimaFuse BMA (solid amber), and IMD Observed ground truth nodes with hover crosshair and tooltips.
   - **Heat Index & Biometeorological Stress**: 35.0°C danger zone shading, Rothfusz regression threshold lines, and multi-model convergence curves.
   - **Hourly Precipitation Hyetograph**: Paired hourly bar charts comparing ClimaFuse vs IMD tipping bucket rain gauges.
 - **Radiosonde Atmospheric Sounding**: Vertical isobaric profile across 7 levels (1000 hPa to 200 hPa tropopause), freezing level (0°C isotherm), CAPE, and Lifted Index (LI).

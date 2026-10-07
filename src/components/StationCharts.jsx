@@ -136,7 +136,7 @@ export default function StationCharts({ station }) {
                 points={confidencePolygon}
               />
 
-              {/* NWP Physics Model (ECMWF IFS) - Royal Blue Dashed */}
+              {/* NWP Physics Model (NOAA GFS) - Royal Blue Dashed */}
               <path
                 d={buildPath('ifs')}
                 fill="none"
@@ -279,7 +279,7 @@ export default function StationCharts({ station }) {
                   <span className="font-medium">{data[activeTempIndex].bmaLow}°C – {data[activeTempIndex].bmaHigh}°C</span>
                 </div>
                 <div className="flex justify-between gap-4 text-blue-700">
-                  <span className="flex items-center gap-1.5"><span className="w-2 h-0.5 bg-blue-600"></span> ECMWF IFS:</span>
+                  <span className="flex items-center gap-1.5"><span className="w-2 h-0.5 bg-blue-600"></span> NOAA GFS:</span>
                   <span className="font-semibold">{data[activeTempIndex].ifs}°C</span>
                 </div>
                 <div className="flex justify-between gap-4 text-emerald-700">
@@ -306,10 +306,10 @@ export default function StationCharts({ station }) {
                   90% Band
                 </span>
               </div>
-              {/* ECMWF IFS */}
+              {/* NOAA GFS */}
               <div className="flex items-center gap-2">
                 <span className="w-3.5 h-0.5 border-t-2 border-dashed border-blue-600 inline-block"></span>
-                <span className="text-slate-700 font-medium">ECMWF IFS (Physics)</span>
+                <span className="text-slate-700 font-medium">NOAA GFS (Physics)</span>
               </div>
               {/* ECMWF AIFS */}
               <div className="flex items-center gap-2">
@@ -490,7 +490,7 @@ export default function StationCharts({ station }) {
                   <span className="font-bold">{data[activeHeatIndex].hiBma}°C</span>
                 </div>
                 <div className="flex justify-between gap-4 text-blue-700">
-                  <span className="flex items-center gap-1.5"><span className="w-2 h-0.5 bg-blue-600"></span> ECMWF IFS:</span>
+                  <span className="flex items-center gap-1.5"><span className="w-2 h-0.5 bg-blue-600"></span> NOAA GFS:</span>
                   <span className="font-semibold">{data[activeHeatIndex].hiIfs}°C</span>
                 </div>
                 <div className="flex justify-between gap-4 text-emerald-700">

@@ -1,7 +1,7 @@
 # ClimaFuse — Development Plan & Roadmap
 
 ## 1. Project Overview
-ClimaFuse is a high-precision, technical meteorological intelligence platform that fuses ECMWF physics-based numerical weather prediction (IFS) with deep learning neural models (AIFS) via adaptive Bayesian Model Averaging (BMA) — weights vary by region, season, and lead time instead of being fixed. Ground truth calibration is driven by 800+ India Meteorological Department (IMD) Automatic Weather Stations (AWS).
+ClimaFuse is a high-precision, technical meteorological intelligence platform that fuses NOAA physics-based numerical weather prediction (GFS) with deep learning neural models (AIFS) via adaptive Bayesian Model Averaging (BMA) — weights vary by region, season, and lead time instead of being fixed. Ground truth calibration is driven by 800+ India Meteorological Department (IMD) Automatic Weather Stations (AWS).
 
 ---
 
@@ -77,12 +77,12 @@ ClimaFuse is a high-precision, technical meteorological intelligence platform th
   - Active `ResizeObserver` lifecycle management with timeout refit ticks for reliable container mounting.
   - Renders BMA model weights across all 3 regimes: Thermal Weights, Precipitation Weights, and Heat Index Weights.
   - Supports 3 basemaps: Physical Relief, Topographic, Satellite.
-  - Interactive model filter: Consensus Blend, ECMWF IFS (Physics), ECMWF AIFS (Neural GNN), NCMRWF Unified (Regional).
+  - Interactive model filter: Consensus Blend, NOAA GFS (Physics), ECMWF AIFS (Neural GNN), NCMRWF Unified (Regional).
   - Bi-directional region synchronization: Clicking any station marker selects its region in the right panel and highlights its node on the map.
   - Comprehensive subcontinental coverage across 25+ microclimatic stations and 12 regions.
 - [x] Dedicated 40% Model Weight Analysis Panel implemented in [`src/components/ModelWeightAnalysisPanel.jsx`](file:///c:/Users/neera/OneDrive/Desktop/ClimaFuse/Climafuse/src/components/ModelWeightAnalysisPanel.jsx):
   - **Lead Time Selector**: Interactive pills for `24 Hours`, `3 Days`, `7 Days`, and `14 Days` dynamically modulating model weight attribution.
-  - **Model Weight Composition (Selected Region)**: Styled region dropdown selector with custom SVG Donut Chart displaying the 3-model split (ECMWF IFS, ECMWF AIFS, NCMRWF Unified) and CRPS skill score gain.
+  - **Model Weight Composition (Selected Region)**: Styled region dropdown selector with custom SVG Donut Chart displaying the 3-model split (NOAA GFS, ECMWF AIFS, NCMRWF Unified) and CRPS skill score gain.
   - **Model Weights by Lead Time (Recharts)**: Multi-line timeseries curve across lead times (`0-6h`, `6-24h`, `1-3d`, `3-7d`, `7-14d`) rendered in ClimaFuse's austere dark SaaS design system with dark glassmorphism tooltips.
   - **Dominant Attribution & Terrain Physics Rationale**: Technical microclimatic explanation and dominant weight range gradient bar.
   - **Full Matrix & Benchmark Modal**: Modal drawer inspecting the 12-region attribution matrix and lead-time CRPS skill score benchmark table.
@@ -98,7 +98,7 @@ ClimaFuse is a high-precision, technical meteorological intelligence platform th
 - [x] Summary Banner in [`src/components/StationSummaryBanner.jsx`](file:///c:/Users/neera/OneDrive/Desktop/ClimaFuse/Climafuse/src/components/StationSummaryBanner.jsx) with WMO station coordinates, ASL elevation, BMA blend, real-time snapshot, and horizon toggles.
 - [x] 5-Parameter Telemetry Grid in [`src/components/StationParameterGrid.jsx`](file:///c:/Users/neera/OneDrive/Desktop/ClimaFuse/Climafuse/src/components/StationParameterGrid.jsx) (Surface Air Temp, Apparent Heat Index, Accumulated Rain, Surface Vector Wind, Relative Humidity).
 - [x] Multi-Model Timeseries Plots in [`src/components/StationCharts.jsx`](file:///c:/Users/neera/OneDrive/Desktop/ClimaFuse/Climafuse/src/components/StationCharts.jsx):
-  - 2m Temperature Curve with 90% BMA confidence interval polygon, ECMWF IFS (Physics), ECMWF AIFS (AI/ML), ClimaFuse BMA Mixture, and IMD Observed nodes with interactive crosshairs and tooltips.
+  - 2m Temperature Curve with 90% BMA confidence interval polygon, NOAA GFS (Physics), ECMWF AIFS (AI/ML), ClimaFuse BMA Mixture, and IMD Observed nodes with interactive crosshairs and tooltips.
   - Heat Index & Biometeorological Stress plot with 35.0°C danger zone shading and threshold lines.
   - Hourly Precipitation & Hyetograph paired bar charts comparing ClimaFuse vs IMD tipping bucket rain gauge.
 - [x] Radiosonde Atmospheric Sounding in [`src/components/StationRadiosonde.jsx`](file:///c:/Users/neera/OneDrive/Desktop/ClimaFuse/Climafuse/src/components/StationRadiosonde.jsx) (isobaric vertical levels 1000 hPa to 200 hPa, freezing level, CAPE, and Lifted Index).

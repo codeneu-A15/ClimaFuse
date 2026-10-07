@@ -38,7 +38,7 @@ export default function StationSummaryBanner({ station }) {
             <span>{station.wmoRegion}</span>
             <span className="text-[#383838]">·</span>
             <span className="text-amber-400 font-medium">
-              BMA Blend: {station.blend.aifs}% AIFS / {station.blend.ifs}% IFS
+              BMA Blend: {station.blend.aifs}% AIFS / {station.blend.ifs}% GFS
             </span>
           </div>
         </div>

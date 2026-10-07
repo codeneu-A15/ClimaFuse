@@ -77,7 +77,7 @@ function ModelWeightDonut({ ec, ai, ncmrwf, dominantName }) {
           stroke="#1e1e1e"
           strokeWidth={strokeWidth}
         />
-        {/* IFS Physics Arc (Sky Blue) */}
+        {/* GFS Physics Arc (Sky Blue) */}
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -252,7 +252,7 @@ export default function ModelWeightAnalysisPanel({
             <div className="flex items-center justify-between p-1.5 rounded-lg bg-[#1a1a1a] border border-[#262626]">
               <span className="flex items-center text-[#38bdf8] text-[11px]">
                 <span className="w-2 h-2 rounded-full bg-[#38bdf8] mr-1.5" />
-                IFS (Physics)
+                GFS (Physics)
               </span>
               <span className="text-white font-bold">{(currentWeights.ec / 100).toFixed(2)}</span>
             </div>
@@ -283,7 +283,7 @@ export default function ModelWeightAnalysisPanel({
             Weights by Lead Time ({region.shortName})
           </span>
           <div className="flex items-center space-x-2 text-[9px] font-mono">
-            <span className="text-[#38bdf8]">● IFS</span>
+            <span className="text-[#38bdf8]">● GFS</span>
             <span className="text-[#4edea3]">● AIFS</span>
             <span className="text-[#fbbf24]">● NCMRWF</span>
           </div>
@@ -314,7 +314,7 @@ export default function ModelWeightAnalysisPanel({
               <Line
                 type="monotone"
                 dataKey="ec"
-                name="IFS Physics"
+                name="GFS Physics"
                 stroke="#38bdf8"
                 strokeWidth={2}
                 dot={{ r: 2.5, fill: '#38bdf8' }}
@@ -424,7 +424,7 @@ export default function ModelWeightAnalysisPanel({
                   <thead className="bg-[#181818] text-[#8e9192] text-[10px] uppercase border-b border-[#262626]">
                     <tr>
                       <th className="p-2.5 font-semibold">Terrain Zone</th>
-                      <th className="p-2.5 font-semibold text-[#38bdf8]">IFS Physics</th>
+                      <th className="p-2.5 font-semibold text-[#38bdf8]">GFS Physics</th>
                       <th className="p-2.5 font-semibold text-[#4edea3]">AIFS Neural</th>
                       <th className="p-2.5 font-semibold text-[#fbbf24]">NCMRWF Reg.</th>
                       <th className="p-2.5 font-semibold text-white">Dominant Rationale</th>
@@ -458,22 +458,22 @@ export default function ModelWeightAnalysisPanel({
                   <div className="space-y-1.5 font-mono text-xs">
                     <div className="flex justify-between p-2 rounded bg-[#1c1c1c]">
                       <span>T+24h Lead</span>
-                      <span className="text-[#8e9192]">IFS: 1.12 · AIFS: 1.08</span>
+                      <span className="text-[#8e9192]">GFS: 1.12 · AIFS: 1.08</span>
                       <span className="text-[#4edea3] font-bold">BMA: 0.94 (+16.1%)</span>
                     </div>
                     <div className="flex justify-between p-2 rounded bg-[#1c1c1c]">
                       <span>T+72h Lead</span>
-                      <span className="text-[#8e9192]">IFS: 1.84 · AIFS: 1.62</span>
+                      <span className="text-[#8e9192]">GFS: 1.84 · AIFS: 1.62</span>
                       <span className="text-[#4edea3] font-bold">BMA: 1.41 (+19.4%)</span>
                     </div>
                     <div className="flex justify-between p-2 rounded bg-[#1c1c1c]">
                       <span>T+120h Lead</span>
-                      <span className="text-[#8e9192]">IFS: 2.92 · AIFS: 2.45</span>
+                      <span className="text-[#8e9192]">GFS: 2.92 · AIFS: 2.45</span>
                       <span className="text-[#4edea3] font-bold">BMA: 2.12 (+21.8%)</span>
                     </div>
                     <div className="flex justify-between p-2 rounded bg-[#1c1c1c]">
                       <span>T+240h Lead</span>
-                      <span className="text-[#8e9192]">IFS: 4.80 · AIFS: 4.30</span>
+                      <span className="text-[#8e9192]">GFS: 4.80 · AIFS: 4.30</span>
                       <span className="text-[#4edea3] font-bold">BMA: 3.78 (+18.2%)</span>
                     </div>
                   </div>

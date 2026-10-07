@@ -28,7 +28,7 @@ export default function StationReasoningAndScorecard({ station }) {
             <div>
               <div className="flex justify-between text-xs font-mono mb-2">
                 <span className="text-blue-400 font-medium">
-                  ECMWF IFS (Physics): {station.blend.ifs}%
+                  NOAA GFS (Physics): {station.blend.ifs}%
                 </span>
                 <span className="text-emerald-400 font-medium">
                   AI-GNN (AIFS Data-driven): {station.blend.aifs}%
@@ -38,7 +38,7 @@ export default function StationReasoningAndScorecard({ station }) {
                 <div
                   className="bg-blue-500 h-full rounded-l-full transition-all duration-700"
                   style={{ width: `${station.blend.ifs}%` }}
-                  title={`ECMWF IFS: ${station.blend.ifs}%`}
+                  title={`NOAA GFS: ${station.blend.ifs}%`}
                 />
                 <div
                   className="bg-emerald-400 h-full rounded-r-full transition-all duration-700"
@@ -163,7 +163,7 @@ export default function StationReasoningAndScorecard({ station }) {
                   <th className="py-2.5 px-4 font-medium uppercase tracking-wider">Parameter</th>
                   <th className="py-2.5 px-3 font-medium uppercase tracking-wider text-white">IMD Observed</th>
                   <th className="py-2.5 px-3 font-medium uppercase tracking-wider text-amber-400">ClimaFuse BMA</th>
-                  <th className="py-2.5 px-3 font-medium uppercase tracking-wider text-blue-400">NWP IFS</th>
+                  <th className="py-2.5 px-3 font-medium uppercase tracking-wider text-blue-400">NWP GFS</th>
                   <th className="py-2.5 px-3 font-medium uppercase tracking-wider text-emerald-400">AI AIFS</th>
                   <th className="py-2.5 px-4 font-medium uppercase tracking-wider text-right">Best Fit</th>
                 </tr>

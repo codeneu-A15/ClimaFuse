@@ -75,11 +75,11 @@ Climafuse/
   - **Single-Frame All-India Standard**: Captures the entire landmass of India from Jammu & Kashmir / Ladakh down to Kanyakumari / Kerala in one single frame without map panning or page scrolling. Enforced via automated `map.fitBounds([[67.0, 6.2], [97.8, 37.5]])` with `{ top: 40, bottom: 50, left: 20, right: 20 }`, initial `center: [82.0, 21.8]`, `zoom: 3.5`, `ResizeObserver`, and a HUD `Fit India` button.
   - **Right 40% Column**: Houses [`ModelWeightAnalysisPanel.jsx`](file:///c:/Users/neera/OneDrive/Desktop/ClimaFuse/Climafuse/src/components/ModelWeightAnalysisPanel.jsx):
     1. **Lead Time Selection**: Pills for `24 Hours`, `3 Days`, `7 Days`, and `14 Days` dynamically recalculating model weights.
-    2. **Model Weight Composition (Selected Region)**: Dropdown region selector + custom SVG Donut Chart showing the 3-model breakdown (IFS, AIFS, NCMRWF) and CRPS skill gain.
+    2. **Model Weight Composition (Selected Region)**: Dropdown region selector + custom SVG Donut Chart showing the 3-model breakdown (GFS, AIFS, NCMRWF) and CRPS skill gain.
     3. **Model Weights by Lead Time**: Recharts timeseries line chart across lead times (`0-6h`, `6-24h`, `1-3d`, `3-7d`, `7-14d`) in ClimaFuse's austere dark SaaS styling.
     4. **Dominant Attribution & Terrain Physics Rationale**: Scientific mechanism and dominant weight scale bar.
     5. **Inspectable Full Matrix Modal**: Popover drawer to view the complete 12-region attribution matrix and lead-time CRPS benchmarks.
-  - Supports 3 weight regimes: **Thermal Weights**, **Precipitation Weights**, and **Heat Index Weights**, combined with 3 basemaps (Physical Relief, Topographic, Satellite) and 4 model focus modes (Consensus Blend, ECMWF IFS, ECMWF AIFS, NCMRWF).
+  - Supports 3 weight regimes: **Thermal Weights**, **Precipitation Weights**, and **Heat Index Weights**, combined with 3 basemaps (Physical Relief, Topographic, Satellite) and 4 model focus modes (Consensus Blend, NOAA GFS, ECMWF AIFS, NCMRWF).
 - **Full Station Analysis & Radiosonde Architecture**:
   - Located at `/station/:cityId` (e.g. `/station/delhi`, `/station/mumbai`) and handled by [`src/Pages/StationAnalysisPage.jsx`](file:///c:/Users/neera/OneDrive/Desktop/ClimaFuse/Climafuse/src/Pages/StationAnalysisPage.jsx).
   - Linked directly from the bottom CTA button in [`StationTelemetryPanel.jsx`](file:///c:/Users/neera/OneDrive/Desktop/ClimaFuse/Climafuse/src/components/StationTelemetryPanel.jsx) (`View Full Station Analytics & Radiosonde`).
@@ -89,7 +89,7 @@ Climafuse/
     2. **Station Summary Banner**: WMO ID, coordinates, elevation ASL, BMA blend, current condition preview, and timeseries horizon switcher.
     3. **5-Parameter Grid**: Surface air temp, apparent heat index, accumulated rain, wind vector, and relative humidity.
     4. **3 High-Fidelity SVG Charts**:
-       - 2m Temperature with 90% BMA confidence interval polygon, NWP IFS, AI AIFS, ClimaFuse BMA, and IMD Observed nodes with interactive cursor crosshairs and tooltips.
+       - 2m Temperature with 90% BMA confidence interval polygon, NWP GFS, AI AIFS, ClimaFuse BMA, and IMD Observed nodes with interactive cursor crosshairs and tooltips.
        - Heat Index & Biometeorological Stress curve with 35.0°C danger zone shading and threshold lines.
        - Hourly Precipitation & Hyetograph paired bar comparison.
     5. **Radiosonde Sounding Profile**: Vertical isobaric levels (1000 hPa to 200 hPa), freezing level, CAPE, and Lifted Index.

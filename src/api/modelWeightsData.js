@@ -8,7 +8,7 @@
  * 3. Heat Index (Biometeorological) Weights
  *
  * Models in the ensemble:
- * - ECMWF IFS HRES: Deterministic Physics NWP (Sky Blue #38bdf8)
+ * - NOAA GFS: Deterministic Physics NWP (Sky Blue #38bdf8)
  * - ECMWF AIFS: Graph Neural Network Deep Learning NWP (Mint #4edea3)
  * - NCMRWF Unified: Regional Indian High-Resolution NWP (Amber #fbbf24)
  */
@@ -27,7 +27,7 @@ export const REGIONS_CATALOG = [
     shortName: 'Maharashtra',
     state: 'Maharashtra',
     center: [73.5, 18.5],
-    dominantModel: 'ECMWF IFS (Physics)',
+    dominantModel: 'NOAA GFS (Physics)',
     dominantColor: '#38bdf8',
     weights: {
       thermal: { ec: 44, ai: 40, ncmrwf: 16, crpsGain: '+18.6%' },
@@ -57,7 +57,7 @@ export const REGIONS_CATALOG = [
         { step: '7-14d', label: '7-14d', ec: 0.36, ai: 0.45, ncmrwf: 0.19 },
       ],
     },
-    synopticNote: 'Steep orographic lifting along Western Ghats escarpment requires hydrostatic mass conservation; IFS physics heavily prioritized (up to 74% in 0-6h) to prevent AI oversmoothing.',
+    synopticNote: 'Steep orographic lifting along Western Ghats escarpment requires hydrostatic mass conservation; GFS physics heavily prioritized (up to 74% in 0-6h) to prevent AI oversmoothing.',
   },
   {
     id: 'gangetic',
@@ -141,7 +141,7 @@ export const REGIONS_CATALOG = [
     shortName: 'Himalayas',
     state: 'Ladakh / J&K / Himachal',
     center: [76.5, 33.5],
-    dominantModel: 'ECMWF IFS (Physics)',
+    dominantModel: 'NOAA GFS (Physics)',
     dominantColor: '#38bdf8',
     weights: {
       thermal: { ec: 56, ai: 28, ncmrwf: 16, crpsGain: '+19.0%' },
@@ -171,7 +171,7 @@ export const REGIONS_CATALOG = [
         { step: '7-14d', label: '7-14d', ec: 0.40, ai: 0.42, ncmrwf: 0.18 },
       ],
     },
-    synopticNote: 'Complex mountain terrain, valley wind tunnels, and snow-albedo boundaries; hydrostatic thermodynamic equations in IFS are indispensable for Western Disturbances.',
+    synopticNote: 'Complex mountain terrain, valley wind tunnels, and snow-albedo boundaries; hydrostatic thermodynamic equations in GFS are indispensable for Western Disturbances.',
   },
   {
     id: 'northeast',
@@ -179,7 +179,7 @@ export const REGIONS_CATALOG = [
     shortName: 'Northeast',
     state: 'Assam / Meghalaya',
     center: [91.7, 25.8],
-    dominantModel: 'ECMWF IFS (Physics)',
+    dominantModel: 'NOAA GFS (Physics)',
     dominantColor: '#38bdf8',
     weights: {
       thermal: { ec: 48, ai: 34, ncmrwf: 18, crpsGain: '+18.0%' },
@@ -209,7 +209,7 @@ export const REGIONS_CATALOG = [
         { step: '7-14d', label: '7-14d', ec: 0.38, ai: 0.43, ncmrwf: 0.19 },
       ],
     },
-    synopticNote: 'World record orographic rainfall trap in Khasi Hills; IFS thermodynamic conservation is assigned 70%–76% weight during extreme monsoon precipitation bursts (>150mm/day).',
+    synopticNote: 'World record orographic rainfall trap in Khasi Hills; GFS thermodynamic conservation is assigned 70%–76% weight during extreme monsoon precipitation bursts (>150mm/day).',
   },
   {
     id: 'deccan',
@@ -247,7 +247,7 @@ export const REGIONS_CATALOG = [
         { step: '7-14d', label: '7-14d', ec: 0.33, ai: 0.48, ncmrwf: 0.19 },
       ],
     },
-    synopticNote: 'Stable 800m–950m altitude continental plateau; high multi-model consensus where AIFS leads temperature prediction and IFS leads convective rainshadow precipitation.',
+    synopticNote: 'Stable 800m–950m altitude continental plateau; high multi-model consensus where AIFS leads temperature prediction and GFS leads convective rainshadow precipitation.',
   },
   {
     id: 'tamilnadu',
@@ -255,7 +255,7 @@ export const REGIONS_CATALOG = [
     shortName: 'Tamil Nadu',
     state: 'Tamil Nadu',
     center: [79.0, 11.5],
-    dominantModel: 'ECMWF IFS (Physics)',
+    dominantModel: 'NOAA GFS (Physics)',
     dominantColor: '#38bdf8',
     weights: {
       thermal: { ec: 42, ai: 40, ncmrwf: 18, crpsGain: '+18.5%' },
@@ -285,7 +285,7 @@ export const REGIONS_CATALOG = [
         { step: '7-14d', label: '7-14d', ec: 0.36, ai: 0.44, ncmrwf: 0.20 },
       ],
     },
-    synopticNote: 'Northeast monsoon coastal convergence zone; easterly squalls and Bay of Bengal cyclonic moisture surges accurately resolved by IFS physics mass conservation.',
+    synopticNote: 'Northeast monsoon coastal convergence zone; easterly squalls and Bay of Bengal cyclonic moisture surges accurately resolved by GFS physics mass conservation.',
   },
   {
     id: 'kerala_goa',
@@ -293,7 +293,7 @@ export const REGIONS_CATALOG = [
     shortName: 'Kerala & Goa',
     state: 'Kerala / Goa',
     center: [75.5, 12.0],
-    dominantModel: 'ECMWF IFS (Physics)',
+    dominantModel: 'NOAA GFS (Physics)',
     dominantColor: '#38bdf8',
     weights: {
       thermal: { ec: 44, ai: 38, ncmrwf: 18, crpsGain: '+18.1%' },
@@ -323,7 +323,7 @@ export const REGIONS_CATALOG = [
         { step: '7-14d', label: '7-14d', ec: 0.36, ai: 0.44, ncmrwf: 0.20 },
       ],
     },
-    synopticNote: 'Monsoon onset gateway; Arabian Sea cross-equatorial low-level jet encounters coastal mountains; IFS physics leads with 66% weight.',
+    synopticNote: 'Monsoon onset gateway; Arabian Sea cross-equatorial low-level jet encounters coastal mountains; GFS physics leads with 66% weight.',
   },
   {
     id: 'gujarat',
@@ -369,7 +369,7 @@ export const REGIONS_CATALOG = [
     shortName: 'Bengal & Odisha',
     state: 'West Bengal / Odisha',
     center: [86.5, 21.5],
-    dominantModel: 'ECMWF IFS (Physics)',
+    dominantModel: 'NOAA GFS (Physics)',
     dominantColor: '#38bdf8',
     weights: {
       thermal: { ec: 44, ai: 38, ncmrwf: 18, crpsGain: '+17.4%' },
@@ -399,7 +399,7 @@ export const REGIONS_CATALOG = [
         { step: '7-14d', label: '7-14d', ec: 0.36, ai: 0.44, ncmrwf: 0.20 },
       ],
     },
-    synopticNote: 'Bay of Bengal tropical cyclone landfall and Kalbaisakhi squall lines; hydrostatic mass conservation in IFS prevents cyclonic eye-wall track dispersion.',
+    synopticNote: 'Bay of Bengal tropical cyclone landfall and Kalbaisakhi squall lines; hydrostatic mass conservation in GFS prevents cyclonic eye-wall track dispersion.',
   },
   {
     id: 'central_india',
@@ -407,7 +407,7 @@ export const REGIONS_CATALOG = [
     shortName: 'Central India',
     state: 'Madhya Pradesh / Chhattisgarh',
     center: [79.5, 22.0],
-    dominantModel: 'Consensus Hybrid (IFS / AIFS)',
+    dominantModel: 'Consensus Hybrid (GFS / AIFS)',
     dominantColor: '#4edea3',
     weights: {
       thermal: { ec: 39, ai: 43, ncmrwf: 18, crpsGain: '+17.7%' },
@@ -437,7 +437,7 @@ export const REGIONS_CATALOG = [
         { step: '7-14d', label: '7-14d', ec: 0.34, ai: 0.47, ncmrwf: 0.19 },
       ],
     },
-    synopticNote: 'Monsoon depression inland tracking corridor; balanced BMA weighting stabilizes forecast variance between IFS thermodynamic lifting and AIFS neural surface heat.',
+    synopticNote: 'Monsoon depression inland tracking corridor; balanced BMA weighting stabilizes forecast variance between GFS thermodynamic lifting and AIFS neural surface heat.',
   },
   {
     id: 'up_bihar',
@@ -475,7 +475,7 @@ export const REGIONS_CATALOG = [
         { step: '7-14d', label: '7-14d', ec: 0.34, ai: 0.47, ncmrwf: 0.19 },
       ],
     },
-    synopticNote: 'High humid air, alluvial soil, and seasonal monsoon depression axis; AIFS provides superior seasonal thermal metrics while IFS resolves heavy precipitation surges.',
+    synopticNote: 'High humid air, alluvial soil, and seasonal monsoon depression axis; AIFS provides superior seasonal thermal metrics while GFS resolves heavy precipitation surges.',
   },
 ];
 
@@ -491,7 +491,7 @@ export const MODEL_WEIGHT_NODES = [
     thermal: { ec: 58, ai: 26, ncmrwf: 16, crpsGain: '+19.4%' },
     precipitation: { ec: 66, ai: 18, ncmrwf: 16, crpsGain: '+22.1%' },
     heatIndex: { ec: 60, ai: 25, ncmrwf: 15, crpsGain: '+18.0%' },
-    synopticNote: 'Steep adiabatic lapse rate requires physical hydrostatic constraint; IFS dominant.',
+    synopticNote: 'Steep adiabatic lapse rate requires physical hydrostatic constraint; GFS dominant.',
   },
   {
     id: 'srinagar',
@@ -503,7 +503,7 @@ export const MODEL_WEIGHT_NODES = [
     thermal: { ec: 52, ai: 32, ncmrwf: 16, crpsGain: '+17.8%' },
     precipitation: { ec: 62, ai: 22, ncmrwf: 16, crpsGain: '+21.4%' },
     heatIndex: { ec: 54, ai: 30, ncmrwf: 16, crpsGain: '+16.5%' },
-    synopticNote: 'Western Disturbance frontal boundary; IFS physics leads cyclonic precipitation.',
+    synopticNote: 'Western Disturbance frontal boundary; GFS physics leads cyclonic precipitation.',
   },
   {
     id: 'shimla',
@@ -515,7 +515,7 @@ export const MODEL_WEIGHT_NODES = [
     thermal: { ec: 54, ai: 30, ncmrwf: 16, crpsGain: '+18.5%' },
     precipitation: { ec: 64, ai: 20, ncmrwf: 16, crpsGain: '+23.0%' },
     heatIndex: { ec: 52, ai: 32, ncmrwf: 16, crpsGain: '+17.2%' },
-    synopticNote: 'Orographic valley winds; IFS retains superior wind shear convergence.',
+    synopticNote: 'Orographic valley winds; GFS retains superior wind shear convergence.',
   },
   {
     id: 'dehradun',
@@ -579,7 +579,7 @@ export const MODEL_WEIGHT_NODES = [
     thermal: { ec: 38, ai: 44, ncmrwf: 18, crpsGain: '+17.9%' },
     precipitation: { ec: 48, ai: 34, ncmrwf: 18, crpsGain: '+19.0%' },
     heatIndex: { ec: 40, ai: 42, ncmrwf: 18, crpsGain: '+17.1%' },
-    synopticNote: 'Monsoon trough axis; balanced blend between IFS physics and AIFS.',
+    synopticNote: 'Monsoon trough axis; balanced blend between GFS physics and AIFS.',
   },
   {
     id: 'varanasi',
@@ -591,7 +591,7 @@ export const MODEL_WEIGHT_NODES = [
     thermal: { ec: 38, ai: 44, ncmrwf: 18, crpsGain: '+17.3%' },
     precipitation: { ec: 50, ai: 32, ncmrwf: 18, crpsGain: '+19.8%' },
     heatIndex: { ec: 42, ai: 40, ncmrwf: 18, crpsGain: '+16.9%' },
-    synopticNote: 'High absolute humidity; IFS retains better moisture flux convergence.',
+    synopticNote: 'High absolute humidity; GFS retains better moisture flux convergence.',
   },
   {
     id: 'patna',
@@ -653,7 +653,7 @@ export const MODEL_WEIGHT_NODES = [
     thermal: { ec: 36, ai: 48, ncmrwf: 16, crpsGain: '+19.5%' },
     precipitation: { ec: 46, ai: 38, ncmrwf: 16, crpsGain: '+18.2%' },
     heatIndex: { ec: 38, ai: 46, ncmrwf: 16, crpsGain: '+18.9%' },
-    synopticNote: 'Diurnal squall front tracking; AIFS leads thermal, IFS leads wind gusts.',
+    synopticNote: 'Diurnal squall front tracking; AIFS leads thermal, GFS leads wind gusts.',
   },
 
   // --- GUJARAT & KUTCH ---
@@ -693,7 +693,7 @@ export const MODEL_WEIGHT_NODES = [
     thermal: { ec: 40, ai: 42, ncmrwf: 18, crpsGain: '+17.4%' },
     precipitation: { ec: 54, ai: 28, ncmrwf: 18, crpsGain: '+20.8%' },
     heatIndex: { ec: 42, ai: 40, ncmrwf: 18, crpsGain: '+16.9%' },
-    synopticNote: 'Monsoon depression path; IFS physics controls precipitation spikes.',
+    synopticNote: 'Monsoon depression path; GFS physics controls precipitation spikes.',
   },
   {
     id: 'nagpur',
@@ -717,7 +717,7 @@ export const MODEL_WEIGHT_NODES = [
     thermal: { ec: 40, ai: 42, ncmrwf: 18, crpsGain: '+17.2%' },
     precipitation: { ec: 56, ai: 26, ncmrwf: 18, crpsGain: '+21.5%' },
     heatIndex: { ec: 43, ai: 38, ncmrwf: 19, crpsGain: '+16.8%' },
-    synopticNote: 'Bay of Bengal low pressure track; IFS provides superior moisture transport.',
+    synopticNote: 'Bay of Bengal low pressure track; GFS provides superior moisture transport.',
   },
 
   // --- BENGAL & ODISHA ---
@@ -731,7 +731,7 @@ export const MODEL_WEIGHT_NODES = [
     thermal: { ec: 44, ai: 38, ncmrwf: 18, crpsGain: '+17.5%' },
     precipitation: { ec: 58, ai: 24, ncmrwf: 18, crpsGain: '+22.4%' },
     heatIndex: { ec: 48, ai: 34, ncmrwf: 18, crpsGain: '+18.1%' },
-    synopticNote: 'High humid air & coastal squall lines; IFS physics essential for rainfall spikes.',
+    synopticNote: 'High humid air & coastal squall lines; GFS physics essential for rainfall spikes.',
   },
   {
     id: 'bhubaneswar',
@@ -743,7 +743,7 @@ export const MODEL_WEIGHT_NODES = [
     thermal: { ec: 45, ai: 37, ncmrwf: 18, crpsGain: '+17.1%' },
     precipitation: { ec: 60, ai: 22, ncmrwf: 18, crpsGain: '+23.5%' },
     heatIndex: { ec: 48, ai: 34, ncmrwf: 18, crpsGain: '+17.9%' },
-    synopticNote: 'Cyclonic storm surges; IFS conservation dynamics heavily prioritized.',
+    synopticNote: 'Cyclonic storm surges; GFS conservation dynamics heavily prioritized.',
   },
   {
     id: 'ranchi',
@@ -755,7 +755,7 @@ export const MODEL_WEIGHT_NODES = [
     thermal: { ec: 44, ai: 38, ncmrwf: 18, crpsGain: '+16.8%' },
     precipitation: { ec: 58, ai: 24, ncmrwf: 18, crpsGain: '+22.0%' },
     heatIndex: { ec: 45, ai: 37, ncmrwf: 18, crpsGain: '+16.2%' },
-    synopticNote: 'Moderate altitude plateau; thermodynamic convective triggers favored by IFS.',
+    synopticNote: 'Moderate altitude plateau; thermodynamic convective triggers favored by GFS.',
   },
 
   // --- MAHARASHTRA & WESTERN GHATS ---
@@ -769,7 +769,7 @@ export const MODEL_WEIGHT_NODES = [
     thermal: { ec: 46, ai: 36, ncmrwf: 18, crpsGain: '+18.6%' },
     precipitation: { ec: 68, ai: 16, ncmrwf: 16, crpsGain: '+27.4%' },
     heatIndex: { ec: 52, ai: 32, ncmrwf: 16, crpsGain: '+20.2%' },
-    synopticNote: 'Extreme coastal convection & squall; IFS physics given 68% weight to eliminate AI oversmoothing.',
+    synopticNote: 'Extreme coastal convection & squall; GFS physics given 68% weight to eliminate AI oversmoothing.',
   },
   {
     id: 'ratnagiri',
@@ -781,7 +781,7 @@ export const MODEL_WEIGHT_NODES = [
     thermal: { ec: 48, ai: 34, ncmrwf: 18, crpsGain: '+18.0%' },
     precipitation: { ec: 70, ai: 15, ncmrwf: 15, crpsGain: '+28.5%' },
     heatIndex: { ec: 54, ai: 30, ncmrwf: 16, crpsGain: '+19.8%' },
-    synopticNote: 'Steepest orographic lifting in India; IFS deterministic physics dominant.',
+    synopticNote: 'Steepest orographic lifting in India; GFS deterministic physics dominant.',
   },
   {
     id: 'pune',
@@ -793,7 +793,7 @@ export const MODEL_WEIGHT_NODES = [
     thermal: { ec: 42, ai: 40, ncmrwf: 18, crpsGain: '+17.9%' },
     precipitation: { ec: 58, ai: 25, ncmrwf: 17, crpsGain: '+22.1%' },
     heatIndex: { ec: 44, ai: 38, ncmrwf: 18, crpsGain: '+17.2%' },
-    synopticNote: 'Rainshadow lee side of Ghats; sharp precipitation boundary resolved by IFS.',
+    synopticNote: 'Rainshadow lee side of Ghats; sharp precipitation boundary resolved by GFS.',
   },
 
   // --- KERALA & GOA ---
@@ -807,7 +807,7 @@ export const MODEL_WEIGHT_NODES = [
     thermal: { ec: 46, ai: 36, ncmrwf: 18, crpsGain: '+18.2%' },
     precipitation: { ec: 67, ai: 17, ncmrwf: 16, crpsGain: '+26.8%' },
     heatIndex: { ec: 50, ai: 33, ncmrwf: 17, crpsGain: '+19.0%' },
-    synopticNote: 'Heavy monsoonal inflow; IFS physics captures acute rain rates.',
+    synopticNote: 'Heavy monsoonal inflow; GFS physics captures acute rain rates.',
   },
   {
     id: 'kochi',
@@ -819,7 +819,7 @@ export const MODEL_WEIGHT_NODES = [
     thermal: { ec: 45, ai: 37, ncmrwf: 18, crpsGain: '+18.0%' },
     precipitation: { ec: 65, ai: 18, ncmrwf: 17, crpsGain: '+25.9%' },
     heatIndex: { ec: 50, ai: 33, ncmrwf: 17, crpsGain: '+18.8%' },
-    synopticNote: 'Monsoon onset gateway; IFS physics resolves early burst dynamics.',
+    synopticNote: 'Monsoon onset gateway; GFS physics resolves early burst dynamics.',
   },
   {
     id: 'thiruvananthapuram',
@@ -883,7 +883,7 @@ export const MODEL_WEIGHT_NODES = [
     thermal: { ec: 44, ai: 38, ncmrwf: 18, crpsGain: '+18.1%' },
     precipitation: { ec: 60, ai: 22, ncmrwf: 18, crpsGain: '+23.2%' },
     heatIndex: { ec: 48, ai: 34, ncmrwf: 18, crpsGain: '+18.9%' },
-    synopticNote: 'Northeast monsoon coastal convergence; IFS physics favored for easterly squalls.',
+    synopticNote: 'Northeast monsoon coastal convergence; GFS physics favored for easterly squalls.',
   },
   {
     id: 'kanyakumari',
@@ -921,7 +921,7 @@ export const MODEL_WEIGHT_NODES = [
     thermal: { ec: 44, ai: 38, ncmrwf: 18, crpsGain: '+17.5%' },
     precipitation: { ec: 60, ai: 22, ncmrwf: 18, crpsGain: '+23.1%' },
     heatIndex: { ec: 45, ai: 37, ncmrwf: 18, crpsGain: '+17.2%' },
-    synopticNote: 'Narrow valley moisture trapping; IFS leads precipitation.',
+    synopticNote: 'Narrow valley moisture trapping; GFS leads precipitation.',
   },
   {
     id: 'cherrapunji',
@@ -933,7 +933,7 @@ export const MODEL_WEIGHT_NODES = [
     thermal: { ec: 52, ai: 30, ncmrwf: 18, crpsGain: '+18.5%' },
     precipitation: { ec: 72, ai: 14, ncmrwf: 14, crpsGain: '+31.2%' },
     heatIndex: { ec: 55, ai: 28, ncmrwf: 17, crpsGain: '+20.5%' },
-    synopticNote: 'World highest precipitation funnel; IFS physics assigned 72% weight to resolve extreme accumulation.',
+    synopticNote: 'World highest precipitation funnel; GFS physics assigned 72% weight to resolve extreme accumulation.',
   },
 ];
 
@@ -947,9 +947,9 @@ export const WEIGHT_REGIMES = {
     icon: 'thermostat',
     title: 'Thermal BMA Weight Distribution',
     description: 'Bayesian weighting for surface temperature & diurnal flux',
-    dominantModel: 'ECMWF AIFS (Deep Learning) in Plains / IFS in Mountains',
+    dominantModel: 'ECMWF AIFS (Deep Learning) in Plains / GFS in Mountains',
     avgWeights: { ec: 41, ai: 42, ncmrwf: 17 },
-    keyInsight: 'AIFS neural model exhibits higher skill (+19% CRPS) across flat basins; IFS physics leads in orographic ridges.',
+    keyInsight: 'AIFS neural model exhibits higher skill (+19% CRPS) across flat basins; GFS physics leads in orographic ridges.',
     legendMin: '20% Min Weight',
     legendMax: '65% Peak Weight',
     gradientCss: 'from-blue-500 via-emerald-400 via-yellow-400 to-orange-500',
@@ -960,9 +960,9 @@ export const WEIGHT_REGIMES = {
     icon: 'rainy',
     title: 'Precipitation BMA Weight Distribution',
     description: 'Bayesian weighting for 24h rainfall & squall convective triggers',
-    dominantModel: 'ECMWF IFS (Physics NWP) in Ghats & Northeast',
+    dominantModel: 'NOAA GFS (Physics NWP) in Ghats & Northeast',
     avgWeights: { ec: 58, ai: 25, ncmrwf: 17 },
-    keyInsight: 'ECMWF IFS physics assigned up to 72% weight in Western Ghats & Meghalaya to eliminate AI oversmoothing of extreme peaks.',
+    keyInsight: 'NOAA GFS physics assigned up to 72% weight in Western Ghats & Meghalaya to eliminate AI oversmoothing of extreme peaks.',
     legendMin: '15% Min Weight',
     legendMax: '75% Peak Weight',
     gradientCss: 'from-sky-400 via-blue-600 to-indigo-700',
@@ -973,9 +973,9 @@ export const WEIGHT_REGIMES = {
     icon: 'whatshot',
     title: 'Heat Index BMA Weight Distribution',
     description: 'Bayesian weighting for coupled humidity & wet-bulb stress',
-    dominantModel: 'Balanced Hybrid (IFS Coastal / AIFS Continental)',
+    dominantModel: 'Balanced Hybrid (GFS Coastal / AIFS Continental)',
     avgWeights: { ec: 46, ai: 37, ncmrwf: 17 },
-    keyInsight: 'IFS physics leads moisture advection in humid coastal corridors (48%–54%), while AIFS captures inland desert heat flux.',
+    keyInsight: 'GFS physics leads moisture advection in humid coastal corridors (48%–54%), while AIFS captures inland desert heat flux.',
     legendMin: '15% Min Weight',
     legendMax: '65% Peak Weight',
     gradientCss: 'from-emerald-500 via-yellow-400 via-orange-500 to-red-600',
@@ -1012,7 +1012,7 @@ export function getModelWeightsGeoJSON(regimeKey = 'thermal', modelFocus = 'blen
       ncmrwfW = 100 - ecW - aiW;
 
       let displayWeight = ecW;
-      let dominant = 'ECMWF IFS';
+      let dominant = 'NOAA GFS';
       let dominantColor = '#38bdf8'; // Sky Blue
 
       if (modelFocus === 'ec') {
@@ -1036,7 +1036,7 @@ export function getModelWeightsGeoJSON(regimeKey = 'thermal', modelFocus = 'blen
           dominantColor = '#fbbf24'; // Amber
           displayWeight = ncmrwfW;
         } else {
-          dominant = 'ECMWF IFS';
+          dominant = 'NOAA GFS';
           dominantColor = '#38bdf8'; // Cyan
           displayWeight = ecW;
         }

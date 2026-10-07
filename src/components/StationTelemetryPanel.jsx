@@ -251,7 +251,7 @@ export default function StationTelemetryPanel({ city, onBack }) {
           <div
             className="bg-white h-full transition-all duration-500"
             style={{ width: `${city.blend.ec}%` }}
-            title={`ECMWF IFS (${city.blend.ec}%)`}
+            title={`NOAA GFS (${city.blend.ec}%)`}
           />
           <div
             className="bg-[#4edea3] h-full transition-all duration-500"

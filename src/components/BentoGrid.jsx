@@ -27,12 +27,12 @@ export default function BentoGrid() {
             <span className="text-white font-mono font-medium">CONFIDENCE 96.1%</span>
           </div>
           <div className="w-full bg-[#222222] h-2 rounded-full overflow-hidden flex">
-            <div className="bg-white h-full transition-all duration-500" style={{ width: '58%' }} title="IFS Weight: 58%" />
+            <div className="bg-white h-full transition-all duration-500" style={{ width: '58%' }} title="GFS Weight: 58%" />
             <div className="bg-[#8e9192] h-full transition-all duration-500" style={{ width: '42%' }} title="AIFS Weight: 42%" />
           </div>
           <div className="flex justify-between items-center font-mono text-[0.6875rem] text-[#8e9192] mt-2">
             <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-white inline-block" /> IFS (Physics): 58%
+              <span className="w-2 h-2 rounded-full bg-white inline-block" /> GFS (Physics): 58%
             </span>
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#8e9192] inline-block" /> AIFS (AI): 42%

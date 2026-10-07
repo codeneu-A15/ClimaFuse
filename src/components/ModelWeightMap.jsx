@@ -25,7 +25,7 @@ setWorkerUrl(workerUrl);
  * Features:
  * - 3 Weight Map Types: Thermal, Precipitation, Heat Index
  * - 3 Basemaps: Physical Relief, Topographic, Satellite
- * - 4 Model Views: Consensus Blend, ECMWF IFS (Physics), ECMWF AIFS (Neural), NCMRWF (Regional)
+ * - 4 Model Views: Consensus Blend, NOAA GFS (Physics), ECMWF AIFS (Neural), NCMRWF (Regional)
  * - Synced Lead Times: 24h, 3d, 7d, 14d
  * - Bi-directional region selection synced with right analysis panel
  * - Complete single-view framing of India landmass from Ladakh to Kanyakumari
@@ -180,7 +180,7 @@ export default function ModelWeightMap({
             ['linear'],
             ['heatmap-density'],
             0, 'rgba(0, 0, 0, 0)',
-            0.18, 'rgba(56, 189, 248, 0.55)', // Sky Blue (IFS dominant)
+            0.18, 'rgba(56, 189, 248, 0.55)', // Sky Blue (GFS dominant)
             0.42, 'rgba(16, 185, 129, 0.72)', // Emerald (AIFS dominant)
             0.68, 'rgba(251, 191, 36, 0.82)', // Amber (High weight)
             0.88, 'rgba(249, 115, 22, 0.88)', // Orange (Very high)
@@ -215,7 +215,7 @@ export default function ModelWeightMap({
           ],
           'circle-color': [
             'case',
-            ['==', ['get', 'dominant'], 'ECMWF IFS'], '#38bdf8',
+            ['==', ['get', 'dominant'], 'NOAA GFS'], '#38bdf8',
             ['==', ['get', 'dominant'], 'ECMWF AIFS'], '#4edea3',
             '#fbbf24',
           ],
@@ -547,7 +547,7 @@ export default function ModelWeightMap({
         <div className="flex items-center p-0.5 rounded-full bg-[#0e0e0e]/90 backdrop-blur-md border border-[#262626] shadow-xl space-x-0.5 font-mono text-[9px]">
           {[
             { id: 'blend', label: 'Consensus Blend', color: 'text-white' },
-            { id: 'ec', label: 'ECMWF IFS', color: 'text-[#38bdf8]' },
+            { id: 'ec', label: 'NOAA GFS', color: 'text-[#38bdf8]' },
             { id: 'ai', label: 'ECMWF AIFS', color: 'text-[#4edea3]' },
             { id: 'ncmrwf', label: 'NCMRWF', color: 'text-[#fbbf24]' },
           ].map((m) => (

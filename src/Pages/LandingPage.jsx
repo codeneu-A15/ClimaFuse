@@ -31,7 +31,7 @@ export default function LandingPage() {
                 <span className="text-[#a3a3a3]">Built from the best of both models.</span>
               </h1>
               <p className="font-sans text-base sm:text-lg text-[#a3a3a3] max-w-xl leading-relaxed mb-8">
-                ClimaFuse seamlessly blends ECMWF physics-based numerical weather prediction (IFS) with deep neural weather models (AIFS) using real-time historical accuracy — dynamically adapting across monsoon regimes, coastal boundaries, and Himalayan topography.
+                ClimaFuse seamlessly blends NOAA physics-based numerical weather prediction (GFS) with deep neural weather models (AIFS) using real-time historical accuracy — dynamically adapting across monsoon regimes, coastal boundaries, and Himalayan topography.
               </p>
               <div className="flex flex-wrap items-center gap-4">
                 <Link
@@ -57,7 +57,7 @@ export default function LandingPage() {
                     Physics NWP
                   </div>
                   <div className="font-['Plus_Jakarta_Sans',sans-serif] text-lg font-semibold text-white">
-                    ECMWF IFS
+                    NOAA GFS
                   </div>
                   <div className="font-sans text-[0.8125rem] text-[#8e9192]">0.1° / 9km High-Res</div>
                 </div>
@@ -120,11 +120,11 @@ export default function LandingPage() {
                   Dual Input
                 </h3>
                 <p className="font-sans text-[0.8125rem] text-[#a3a3a3] leading-relaxed">
-                  IFS (physics-based) and AIFS (AI model) forecast the same time and place simultaneously across standardized 0.1° grid cells.
+                  GFS (physics-based) and AIFS (AI model) forecast the same time and place simultaneously across standardized 0.1° grid cells.
                 </p>
               </div>
               <div className="mt-6 pt-4 border-t border-[#262626]/40 flex items-center justify-between font-mono text-[0.6875rem] text-[#8e9192]">
-                <span>ECMWF Open Data</span>
+                <span>NOAA &amp; ECMWF Open Data</span>
                 <span className="text-white">T+0h to T+240h</span>
               </div>
             </div>
@@ -299,7 +299,7 @@ export default function LandingPage() {
                 Explore the ClimaFuse Live Interactive Prototype.
               </h3>
               <p className="font-sans text-[0.9375rem] text-[#a3a3a3] leading-relaxed">
-                Built as a proof-of-concept demonstration for the hackathon jury and selection committee. Experience how real-time Bayesian Model Averaging (BMA) blends ECMWF physics (IFS) with neural AI models (AIFS) against IMD ground truth across 840+ Indian weather stations.
+                Built as a proof-of-concept demonstration for the hackathon jury and selection committee. Experience how real-time Bayesian Model Averaging (BMA) blends NOAA physics (GFS) with neural AI models (AIFS) against IMD ground truth across 840+ Indian weather stations.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3.5 relative z-10 shrink-0">
