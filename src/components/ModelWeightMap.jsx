@@ -4,12 +4,10 @@ import { setWorkerUrl } from 'maplibre-gl';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 import {
   WEIGHT_REGIMES,
-  LEAD_TIMES,
   getModelWeightsGeoJSON,
   MODEL_WEIGHT_NODES,
-  REGIONS_CATALOG,
 } from '../api/modelWeightsData';
-import { BASEMAPS } from './MapComponent';
+import { BASEMAPS, getSubcontinentalBasemapStyle, switchBasemap } from './MapComponent';
 import { INDIA_GEOJSON } from '../api/indiaBoundary';
 
 // Ensure MapLibre worker is resolved in Vite builds
@@ -38,7 +36,6 @@ export default function ModelWeightMap({
   selectedRegion = 'maharashtra',
   onSelectRegion,
   leadTime = '24h',
-  onLeadTimeChange,
 }) {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
@@ -104,7 +101,7 @@ export default function ModelWeightMap({
 
   // Helper to attach India boundary and Model Weight layers
   const attachWeightLayers = (map, basemapKey, regimeKey, modelKey, leadKey) => {
-    if (!map || !map.isStyleLoaded()) return;
+    if (!map || !map.getStyle()) return;
 
     // 1. India GeoJSON boundary from in-memory dataset
     if (!map.getSource('india-boundary')) {
@@ -236,8 +233,7 @@ export default function ModelWeightMap({
       [106.0, 41.0],
     ];
 
-    const selectedBasemap = BASEMAPS[currentBasemap] || BASEMAPS.physical;
-    const initialStyle = selectedBasemap.getStyle();
+    const initialStyle = getSubcontinentalBasemapStyle(currentBasemap);
 
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
@@ -297,22 +293,17 @@ export default function ModelWeightMap({
 
   const isInitialBasemapMount = useRef(true);
 
-  // Update style when basemap changes (skipping initial mount)
+  // Update basemap layer when basemap changes (skipping initial mount)
   useEffect(() => {
     if (isInitialBasemapMount.current) {
       isInitialBasemapMount.current = false;
       return;
     }
     const map = mapRef.current;
-    if (!map) return;
+    if (!map || !map.getStyle()) return;
 
-    const basemap = BASEMAPS[currentBasemap] || BASEMAPS.physical;
-    map.setStyle(basemap.getStyle());
-
-    map.once('style.load', () => {
-      attachWeightLayers(map, currentBasemap, currentRegime, currentModel, currentLeadTime);
-      renderDOMMarkers(map, currentRegime, currentModel, currentLeadTime, selectedRegion);
-    });
+    switchBasemap(map, currentBasemap);
+    attachWeightLayers(map, currentBasemap, currentRegime, currentModel, currentLeadTime);
   }, [currentBasemap]);
 
   // In-place selection state update for model weight badges (prevents DOM destruction, flicker, and layout shifts)
@@ -347,7 +338,7 @@ export default function ModelWeightMap({
       lastRenderParamsRef.current.model !== currentModel ||
       lastRenderParamsRef.current.lead !== currentLeadTime;
 
-    if (map.isStyleLoaded()) {
+    if (map.getStyle()) {
       const source = map.getSource('model-weights-source');
       if (source) {
         source.setData(getModelWeightsGeoJSON(currentRegime, currentModel, currentLeadTime));
@@ -391,8 +382,8 @@ export default function ModelWeightMap({
       aiW = Math.round((aiW / total) * 100);
       ncmrwfW = 100 - ecW - aiW;
 
-      let displayWeight = ecW;
-      let pipColor = '#38bdf8';
+      let displayWeight;
+      let pipColor;
 
       if (modelKey === 'ai') {
         displayWeight = aiW;

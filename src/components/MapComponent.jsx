@@ -3,6 +3,7 @@ import * as maplibregl from 'maplibre-gl';
 import { Link } from 'react-router-dom';
 import { getCities } from '../api/cities';
 import { getAtmosphericGeoJSON } from '../api/atmosphericData';
+import { INDIA_GEOJSON } from '../api/indiaBoundary';
 
 /**
  * Available MapLibre basemap sources.
@@ -108,7 +109,6 @@ export const BASEMAPS = {
 
 // Check for optional MapTiler API Key in environment
 const MAPTILER_KEY = import.meta.env.VITE_MAPTILER_KEY;
-const INDIA_GEOJSON_URL = '/india.geojson';
 if (MAPTILER_KEY) {
   BASEMAPS.maptilerTopo = {
     id: 'maptilerTopo',
@@ -118,6 +118,114 @@ if (MAPTILER_KEY) {
     getStyle: () => `https://api.maptiler.com/maps/topo-v2/style.json?key=${MAPTILER_KEY}`,
   };
 }
+
+/**
+ * Composite basemap style that includes all 3 ESRI raster tile sources.
+ * This enables instant zero-flicker switching between Physical Relief, Topographic,
+ * and Satellite imagery without tearing down the style, destroying GeoJSON sources,
+ * or wiping out atmospheric heatmap layers.
+ */
+export const getSubcontinentalBasemapStyle = (activeBasemap = 'physical') => ({
+  version: 8,
+  sources: {
+    'esri-physical': {
+      type: 'raster',
+      tiles: [
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}',
+      ],
+      tileSize: 256,
+      maxzoom: 8,
+      attribution: 'Tiles &copy; Esri &mdash; Source: US National Park Service',
+    },
+    'esri-topo': {
+      type: 'raster',
+      tiles: [
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+      ],
+      tileSize: 256,
+      maxzoom: 18,
+      attribution: 'Tiles &copy; Esri, DeLorme, NAVTEQ',
+    },
+    'esri-satellite': {
+      type: 'raster',
+      tiles: [
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      ],
+      tileSize: 256,
+      maxzoom: 18,
+      attribution: 'Tiles &copy; Esri, Maxar, Earthstar Geographics',
+    },
+  },
+  layers: [
+    {
+      id: 'esri-physical-layer',
+      type: 'raster',
+      source: 'esri-physical',
+      minzoom: 0,
+      maxzoom: 18,
+      layout: {
+        visibility: activeBasemap === 'physical' ? 'visible' : 'none',
+      },
+      paint: {
+        'raster-contrast': 0.15,
+        'raster-saturation': 0.1,
+      },
+    },
+    {
+      id: 'esri-topo-layer',
+      type: 'raster',
+      source: 'esri-topo',
+      minzoom: 0,
+      maxzoom: 18,
+      layout: {
+        visibility: activeBasemap === 'topo' ? 'visible' : 'none',
+      },
+    },
+    {
+      id: 'esri-satellite-layer',
+      type: 'raster',
+      source: 'esri-satellite',
+      minzoom: 0,
+      maxzoom: 18,
+      layout: {
+        visibility: activeBasemap === 'satellite' ? 'visible' : 'none',
+      },
+    },
+  ],
+});
+
+/**
+ * Seamlessly toggles the active basemap layer on the map without reloading the style
+ * or removing any meteorological heatmaps or boundary overlays.
+ */
+export const switchBasemap = (map, newBasemapId) => {
+  if (!map || !map.getStyle()) return;
+
+  const basemapLayers = {
+    physical: 'esri-physical-layer',
+    topo: 'esri-topo-layer',
+    satellite: 'esri-satellite-layer',
+  };
+
+  const hasAllLayers = Object.values(basemapLayers).every((layerId) => Boolean(map.getLayer(layerId)));
+
+  if (hasAllLayers) {
+    Object.entries(basemapLayers).forEach(([id, layerId]) => {
+      map.setLayoutProperty(layerId, 'visibility', id === newBasemapId ? 'visible' : 'none');
+    });
+
+    if (map.getLayer('india-outline')) {
+      map.setPaintProperty(
+        'india-outline',
+        'line-color',
+        newBasemapId === 'satellite' ? '#38bdf8' : '#0284c7'
+      );
+    }
+  } else {
+    const basemap = BASEMAPS[newBasemapId] || BASEMAPS.physical;
+    map.setStyle(basemap.getStyle());
+  }
+};
 
 /**
  * MapComponent
@@ -134,7 +242,6 @@ export default function MapComponent({
   onBasemapChange,
   layerType = 'default',
   onLayerChange,
-  choroplethData = null,
   cities = getCities(),
 }) {
   const mapContainerRef = useRef(null);
@@ -145,6 +252,16 @@ export default function MapComponent({
   const [cursorCoords, setCursorCoords] = useState({ lat: '22.80', lng: '79.20' });
 
   const isLanding = variant === 'landing';
+
+  const currentOverlayRef = useRef(currentOverlay);
+  useEffect(() => {
+    currentOverlayRef.current = currentOverlay;
+  }, [currentOverlay]);
+
+  const currentBasemapRef = useRef(currentBasemap);
+  useEffect(() => {
+    currentBasemapRef.current = currentBasemap;
+  }, [currentBasemap]);
 
   // Keep local basemap in sync if prop changes
   useEffect(() => {
@@ -159,8 +276,8 @@ export default function MapComponent({
   }, [layerType]);
 
   // Helper to attach India boundary and atmospheric telemetry layers to current style
-  const attachOverlays = (map, activeBasemapKey) => {
-    if (!map || !map.isStyleLoaded()) return;
+  const attachOverlays = (map, activeBasemapKey = currentBasemapRef.current, activeOverlayKey = currentOverlayRef.current) => {
+    if (!map || !map.getStyle()) return;
 
     // 1. Load India GeoJSON boundary from in-memory dataset
     try {
@@ -404,7 +521,7 @@ export default function MapComponent({
     }
 
     // Apply overlay visibility
-    applyMeteorologicalLayer(map, currentOverlay);
+    applyMeteorologicalLayer(map, activeOverlayKey);
   };
 
   // Initialize MapLibre GL map instance
@@ -417,8 +534,7 @@ export default function MapComponent({
       [106.0, 41.0], // Northeast [lng, lat]
     ];
 
-    const selectedBasemap = BASEMAPS[currentBasemap] || BASEMAPS.physical;
-    const initialStyle = selectedBasemap.getStyle();
+    const initialStyle = getSubcontinentalBasemapStyle(currentBasemap);
 
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
@@ -434,9 +550,9 @@ export default function MapComponent({
 
     mapRef.current = map;
 
-    // CRITICAL FIX: In MapLibre, 'load' fires on initial mount
+    // In MapLibre, 'load' fires on initial mount
     map.on('load', () => {
-      attachOverlays(map, currentBasemap);
+      attachOverlays(map, currentBasemapRef.current, currentOverlayRef.current);
       if (!isLanding && !selectedCity) {
         map.fitBounds(
           [
@@ -454,7 +570,7 @@ export default function MapComponent({
 
     // Also listen to style.load for subsequent dynamic style changes
     map.on('style.load', () => {
-      attachOverlays(map, currentBasemap);
+      attachOverlays(map, currentBasemapRef.current, currentOverlayRef.current);
     });
 
     // Cursor position HUD tracking
@@ -485,24 +601,17 @@ export default function MapComponent({
 
   const isInitialBasemapMount = useRef(true);
 
-  // Switch basemap style when currentBasemap changes (skipping initial mount)
+  // Switch basemap layer when currentBasemap changes (skipping initial mount)
   useEffect(() => {
     if (isInitialBasemapMount.current) {
       isInitialBasemapMount.current = false;
       return;
     }
     const map = mapRef.current;
-    if (!map) return;
+    if (!map || !map.getStyle()) return;
 
-    const basemap = BASEMAPS[currentBasemap] || BASEMAPS.physical;
-    const newStyle = basemap.getStyle();
-
-    map.setStyle(newStyle);
-
-    map.once('style.load', () => {
-      attachOverlays(map, currentBasemap);
-      renderMarkers(map, cities, selectedCity, onCityClick, isLanding);
-    });
+    switchBasemap(map, currentBasemap);
+    attachOverlays(map, currentBasemap, currentOverlay);
   }, [currentBasemap]);
 
   // Update meteorological layer expression when currentOverlay changes
@@ -510,66 +619,21 @@ export default function MapComponent({
     const map = mapRef.current;
     if (!map) return;
 
-    if (map.isStyleLoaded()) {
+    if (map.getStyle()) {
       if (!map.getLayer('thermal-heatmap')) {
-        attachOverlays(map, currentBasemap);
+        attachOverlays(map, currentBasemap, currentOverlay);
+      } else {
+        applyMeteorologicalLayer(map, currentOverlay);
       }
-      applyMeteorologicalLayer(map, currentOverlay);
     } else {
       map.once('load', () => {
-        attachOverlays(map, currentBasemap);
-        applyMeteorologicalLayer(map, currentOverlay);
+        attachOverlays(map, currentBasemap, currentOverlay);
       });
     }
   }, [currentOverlay]);
 
   // Reference storing created marker items to allow fast in-place selection updates
   const markersDataRef = useRef([]);
-
-  // In-place update of marker selection state (prevents DOM destruction, flicker, and layout shifts)
-  const updateMarkerSelection = (currentSelected) => {
-    markersDataRef.current.forEach(({ pillEl, dotEl, containerEl, city }) => {
-      const isSelected = currentSelected?.id === city.id;
-      const dotMargin = dotEl.getAttribute('data-margin') || 'mx-auto';
-      if (isSelected) {
-        containerEl.style.zIndex = '40';
-        pillEl.className =
-          'relative flex items-center space-x-1.5 px-2 py-0.5 rounded-full backdrop-blur-md shadow-xl whitespace-nowrap bg-[#181818] border-2 border-[#4edea3] ring-1 ring-[#4edea3]/40 shadow-[0_0_16px_rgba(78,222,163,0.3)] transition-colors duration-150';
-        dotEl.className = `w-2 h-2 rounded-full bg-[#4edea3] ring-2 ring-white shadow-[0_0_8px_#4edea3] transition-colors duration-150 ${dotMargin}`;
-      } else {
-        containerEl.style.zIndex = '20';
-        pillEl.className =
-          'relative flex items-center space-x-1.5 px-2 py-0.5 rounded-full backdrop-blur-md shadow-xl whitespace-nowrap bg-[#111111]/92 border-2 border-[#333333] hover:border-[#666666] transition-colors duration-150';
-        dotEl.className = `w-2 h-2 rounded-full bg-[#e5e2e1] ring-2 ring-black/70 shadow-sm transition-colors duration-150 ${dotMargin}`;
-      }
-      const iconEl = pillEl.querySelector('.material-symbols-outlined');
-      if (iconEl) {
-        iconEl.className = `material-symbols-outlined text-[13px] ${
-          isSelected ? 'text-[#4edea3]' : 'text-[#8e9192]'
-        }`;
-      }
-    });
-  };
-
-  // Sync DOM Markers for cities
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-
-    if (markersDataRef.current.length === cities.length && !isLanding) {
-      updateMarkerSelection(selectedCity);
-    } else {
-      renderMarkers(map, cities, selectedCity, onCityClick, isLanding);
-    }
-  }, [cities, selectedCity, onCityClick, isLanding]);
-
-  // Handler for basemap change button
-  const handleBasemapSelect = (key) => {
-    setCurrentBasemap(key);
-    if (onBasemapChange) {
-      onBasemapChange(key);
-    }
-  };
 
   // Helper to render MapLibre DOM markers
   const renderMarkers = (map, cityList, currentSelected, clickHandler, landingMode) => {
@@ -761,6 +825,51 @@ export default function MapComponent({
         }
       }
     });
+  };
+
+  // In-place update of marker selection state (prevents DOM destruction, flicker, and layout shifts)
+  const updateMarkerSelection = (currentSelected) => {
+    markersDataRef.current.forEach(({ pillEl, dotEl, containerEl, city }) => {
+      const isSelected = currentSelected?.id === city.id;
+      const dotMargin = dotEl.getAttribute('data-margin') || 'mx-auto';
+      if (isSelected) {
+        containerEl.style.zIndex = '40';
+        pillEl.className =
+          'relative flex items-center space-x-1.5 px-2 py-0.5 rounded-full backdrop-blur-md shadow-xl whitespace-nowrap bg-[#181818] border-2 border-[#4edea3] ring-1 ring-[#4edea3]/40 shadow-[0_0_16px_rgba(78,222,163,0.3)] transition-colors duration-150';
+        dotEl.className = `w-2 h-2 rounded-full bg-[#4edea3] ring-2 ring-white shadow-[0_0_8px_#4edea3] transition-colors duration-150 ${dotMargin}`;
+      } else {
+        containerEl.style.zIndex = '20';
+        pillEl.className =
+          'relative flex items-center space-x-1.5 px-2 py-0.5 rounded-full backdrop-blur-md shadow-xl whitespace-nowrap bg-[#111111]/92 border-2 border-[#333333] hover:border-[#666666] transition-colors duration-150';
+        dotEl.className = `w-2 h-2 rounded-full bg-[#e5e2e1] ring-2 ring-black/70 shadow-sm transition-colors duration-150 ${dotMargin}`;
+      }
+      const iconEl = pillEl.querySelector('.material-symbols-outlined');
+      if (iconEl) {
+        iconEl.className = `material-symbols-outlined text-[13px] ${
+          isSelected ? 'text-[#4edea3]' : 'text-[#8e9192]'
+        }`;
+      }
+    });
+  };
+
+  // Sync DOM Markers for cities
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    if (markersDataRef.current.length === cities.length && !isLanding) {
+      updateMarkerSelection(selectedCity);
+    } else {
+      renderMarkers(map, cities, selectedCity, onCityClick, isLanding);
+    }
+  }, [cities, selectedCity, onCityClick, isLanding]);
+
+  // Handler for basemap change button
+  const handleBasemapSelect = (key) => {
+    setCurrentBasemap(key);
+    if (onBasemapChange) {
+      onBasemapChange(key);
+    }
   };
 
   // --- RENDER VARIANT: LANDING PAGE ---
